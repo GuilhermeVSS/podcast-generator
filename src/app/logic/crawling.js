@@ -70,7 +70,7 @@ module.exports = {
     strategy: null,
     setStrategy: function(source){
         this.strategy = strategyMap[source];
-        const ans = {};
+        
         if(!this.strategy){
            return {
             error: true,
