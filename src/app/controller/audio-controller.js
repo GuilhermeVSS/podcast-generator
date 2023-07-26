@@ -29,16 +29,12 @@ class AudioController {
     }
 
     async getAudio(req, res) {
-
         try {
             let { title } = req.params;
-            if(title == 'surpresa'){
-                title = 'depois-vo-dizer-que-foi-sorte';
-            }
             const audios = await Audio.find({ title });
             const concatenatedAudioBuffer = Buffer.concat(audios.map(audio => audio.audio));
             if (!concatenatedAudioBuffer) {
-                return res.status(404).send('Áudio não encontrado no MongoDB.');
+                return res.status(404).send('Audio not found');
             }
             res.set('Content-Type', 'audio/mpeg');
 
@@ -52,8 +48,8 @@ class AudioController {
                 .outputOptions('-acodec', 'copy')
                 .format('mp3')
                 .on('error', err => {
-                    console.error('Erro ao juntar os áudios:', err);
-                    res.status(500).send('Erro ao juntar os áudios.');
+                    console.error('Error when joining the audios:', err);
+                    res.status(500).send('Error when joining the audios.');
                 })
                 .on('end', () => {
                     concatenatedAudioStream.pipe(res);

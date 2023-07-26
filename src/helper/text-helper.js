@@ -1,5 +1,9 @@
 
 class TextHelper {
+
+    titleNormalize(title){
+        return title.replace(/[\u0300-\u036f]/g, '').replace(/[^\w\s]/gi, '').toLowerCase().split(' ').join('-');
+    }
     removeBrackets(text){
         const byOpenings = text.replace('“', '').replace('”', '').split('<');
         return byOpenings.map(data=>data.slice(data.indexOf('>')+1)).join('');
