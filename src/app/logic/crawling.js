@@ -1,7 +1,8 @@
 const puppeteer = require('puppeteer');
 const textHelper = require('../../helper/text-helper');
 
-module.exports = async ({ url }) => {
+
+async function medium({url}){
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(url);
@@ -58,5 +59,34 @@ module.exports = async ({ url }) => {
     const { title } = sectionArray[0];
     const finalText = textHelper.unifyText(sectionArray);
     return { title: textHelper.titleNormalize(title), text: finalText };
+}
+
+const strategyMap = {
+    'medium': medium,
+
+}
+
+module.exports = {
+    strategy: null,
+    setStrategy: function(source){
+        this.strategy = strategyMap[source];
+        const ans = {};
+        if(!this.strategy){
+           return {
+            error: true,
+            message: 'Strategy not found'
+           }
+        }
+        return {error: false,
+            message: 'Strategy was set successfully'
+        }
+
+    },
+    executeStrategy: async function({url}){
+        if(this.strategy === null){
+            throw new Error('The strategy was not defined')
+        }
+        return await this.strategy({url});
+    }
 }
 

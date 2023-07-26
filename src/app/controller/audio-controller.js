@@ -13,9 +13,14 @@ class AudioController {
     async createAudio(req, res) {
         try {
 
-            const { url } = req.body;
-            const { title, text } = await crawling({ url });
+            const { url, source } = req.body;
+            const {error, message } = crawling.setStrategy(source);
+            if(error == true){
+                return res.status(404).json({message});
+            }
+            const {title, text} = await crawling.executeStrategy({url});
             const fullText = text.join('');
+
             for (const piece of text) {
                 const audioSynthesized = await synthesizer({ text: piece });
                 const audio = new Audio({ title, audio: new Binary(audioSynthesized.AudioStream) });
