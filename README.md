@@ -1,1 +1,1 @@
-# my-podcast
+# podcast-generator
